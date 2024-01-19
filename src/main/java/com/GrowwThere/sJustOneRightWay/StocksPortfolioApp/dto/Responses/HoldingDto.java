@@ -1,6 +1,5 @@
 package com.GrowwThere.sJustOneRightWay.StocksPortfolioApp.dto.Responses;
 
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,10 +10,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class HoldingDto {
-    private Long StockId;
-    private String StackName;
+    private Long stockId;
+    private String stockName;
     private int quantity;
-    private Double BuyPrice;
-    private Double CurrentPrice;
-    private Double GainLoss;
+    private Double buyPrice;
+    private Double currentPrice;
+    private Double gainLoss;
 }

@@ -15,7 +15,7 @@ import java.util.List;
 @Builder
 public class PortfolioResponseDto {
     private List<HoldingDto> holdings=new ArrayList<>();
-    private int TotalPortfolioHoldings;
-    private Double TotalBuyPrice;
-    private Float TotalGainLossPercentage;
+    private int totalPortfolioHoldings;
+    private double totalBuyPrice;
+    private Float totalGainLossPercentage;
 }

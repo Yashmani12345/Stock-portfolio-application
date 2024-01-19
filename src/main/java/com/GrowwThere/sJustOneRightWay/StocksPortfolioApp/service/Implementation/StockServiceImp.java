@@ -44,7 +44,7 @@ public class StockServiceImp implements StockService {
             Double highPrice = Double.parseDouble((columns[5]));
             Double lowPrice = Double.parseDouble((columns[6]));
             Double closingPrice = Double.parseDouble((columns[7]));
-            Double lastPrice= Double.parseDouble((columns[8]));
+            Double lastPrice= Double.parseDouble((columns[9]));
 
             Stock stock = Stock.builder()
                     .stockId(stockID)
