@@ -18,6 +18,7 @@ class UserServiceTest {
     @Autowired
     @MockBean
     private UserRepository userRepository;
+
   @BeforeEach
   void setUp() {
     User user=User.builder()

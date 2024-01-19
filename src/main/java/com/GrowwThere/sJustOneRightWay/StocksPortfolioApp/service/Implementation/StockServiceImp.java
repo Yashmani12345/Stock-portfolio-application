@@ -40,11 +40,11 @@ public class StockServiceImp implements StockService {
             String[] columns = line.split(",");
             Long stockID = Long.parseLong(columns[0]);
             String stockName = columns[1];
-            Double openingPrice = Double.parseDouble((columns[4]));
-            Double highPrice = Double.parseDouble((columns[5]));
-            Double lowPrice = Double.parseDouble((columns[6]));
-            Double closingPrice = Double.parseDouble((columns[7]));
-            Double lastPrice= Double.parseDouble((columns[9]));
+            double openingPrice = Double.parseDouble((columns[4]));
+            double highPrice = Double.parseDouble((columns[5]));
+            double lowPrice = Double.parseDouble((columns[6]));
+            double closingPrice = Double.parseDouble((columns[7]));
+            double lastPrice= Double.parseDouble((columns[9]));
 
             Stock stock = Stock.builder()
                     .stockId(stockID)
