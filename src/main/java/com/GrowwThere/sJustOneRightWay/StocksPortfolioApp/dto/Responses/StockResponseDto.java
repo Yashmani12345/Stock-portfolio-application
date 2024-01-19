@@ -12,9 +12,9 @@ import lombok.NoArgsConstructor;
 public class StockResponseDto {
     private Long stockId;
     private String stockName;
-    private Double openingPrice;
-    private Double closingPrice;
-    private Double highPrice;
-    private Double lowPrice;
-    private Double lastPrice;
+    private double openingPrice;
+    private double closingPrice;
+    private double highPrice;
+    private double lowPrice;
+    private double lastPrice;
 }

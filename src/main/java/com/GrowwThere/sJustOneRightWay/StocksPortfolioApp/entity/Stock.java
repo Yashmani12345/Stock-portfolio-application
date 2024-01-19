@@ -19,14 +19,14 @@ public class Stock {
     private Long stockId;
     @NotBlank(message="Please add trade type.")
     private String stockName;
-    @NotBlank(message = "Please add trade type.")
-    private Double openingPrice;
-    @NotBlank(message="Please add trade type.")
-    private Double closingPrice;
-    @NotBlank(message="Please add trade type.")
-    private Double highPrice;
-    @NotBlank(message="Please add trade type.")
-    private Double lowPrice;
-    @NotBlank(message="Please add trade type.")
-    private Double lastPrice;
+//    @NotBlank(message = "Please add trade type.")
+    private double openingPrice;
+//    @NotBlank(message="Please add trade type.")
+    private double closingPrice;
+//    @NotBlank(message="Please add trade type.")
+    private double highPrice;
+//    @NotBlank(message="Please add trade type.")
+    private double lowPrice;
+//    @NotBlank(message="Please add trade type.")
+    private double lastPrice;
 }
