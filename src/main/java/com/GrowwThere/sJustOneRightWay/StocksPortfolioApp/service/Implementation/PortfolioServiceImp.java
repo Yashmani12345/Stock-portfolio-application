@@ -24,32 +24,41 @@ public class PortfolioServiceImp implements PortfolioService {
     StockRepository stockRepository;
 
     public PortfolioResponseDto fetchUserPortfolioById(Long userId) {
+
         List<Trade> userBuyTrades = tradeRepository.findByUserIdAndTradeType(userId, TradeType.Buy);
         List<Trade> userSellTrades = tradeRepository.findByUserIdAndTradeType(userId,
             TradeType.Sell);
-        Map<Long, List<Trade>> buyTradeOfUser = new HashMap<>();
-        Map<Long, List<Trade>> sellTradeOfUser = new HashMap<>();
-        Map<Long, Integer> stockIdMap = new HashMap<>();
 
-        for (Trade buyTrades : userBuyTrades) {
-            if (!stockIdMap.containsKey(buyTrades.getStockId())) {
-                stockIdMap.put(buyTrades.getStockId(), 1);
-                List<Trade> allTrades = tradeRepository.findByUserIdAndStockIdAndTradeType(userId,
-                    buyTrades.getStockId(), TradeType.Buy);
-                buyTradeOfUser.put(buyTrades.getStockId(), allTrades);
+        Map<Long, List<Trade>> buyTradesOfUser = tradesOfOneStockIdOfUser(userBuyTrades, userId,
+            TradeType.Buy);
+        Map<Long, List<Trade>> sellTradesOfUser = tradesOfOneStockIdOfUser(userSellTrades, userId,
+            TradeType.Sell);
+
+        List<HoldingDto> holdings=calculationOfHolding(buyTradesOfUser,sellTradesOfUser);
+        return calculationOfPortfolio(holdings);
+    }
+
+    private Map<Long, List<Trade>> tradesOfOneStockIdOfUser(List<Trade> userTrades, Long userId,
+        TradeType tradeType) {
+        Map<Long, Integer> stockIdMap = new HashMap<>();
+        Map<Long, List<Trade>> TradesOfUserCorrespondToStockId = new HashMap<>();
+        for (Trade trade : userTrades) {
+            if (!stockIdMap.containsKey(trade.getStockId())) {
+                stockIdMap.put(trade.getStockId(), 1);
+                List<Trade> allTradesOfOneStock = tradeRepository.findByUserIdAndStockIdAndTradeType(
+                    userId,
+                    trade.getStockId(), tradeType);
+                TradesOfUserCorrespondToStockId.put(trade.getStockId(), allTradesOfOneStock);
             }
         }
-        stockIdMap.clear();
-        for (Trade sellTrades : userSellTrades) {
-            if (!stockIdMap.containsKey(sellTrades.getStockId())) {
-                stockIdMap.put(sellTrades.getStockId(), 1);
-                List<Trade> allTrades = tradeRepository.findByUserIdAndStockIdAndTradeType(userId,
-                    sellTrades.getStockId(), TradeType.Sell);
-                sellTradeOfUser.put(sellTrades.getStockId(), allTrades);
-            }
-        }
+        return TradesOfUserCorrespondToStockId;
+    }
+
+    private List<HoldingDto> calculationOfHolding(Map<Long, List<Trade>> buyTradesOfUser,
+        Map<Long, List<Trade>> sellTradesOfUser) {
         List<HoldingDto> holdings = new ArrayList<>();
-        for (Map.Entry<Long, List<Trade>> entry : buyTradeOfUser.entrySet()) {
+
+        for (Map.Entry<Long, List<Trade>> entry : buyTradesOfUser.entrySet()) {
             Long key = entry.getKey();
             List<Trade> value = entry.getValue();
             double buyPriceOfStock = value.get(0).getPrice();
@@ -58,7 +67,7 @@ public class PortfolioServiceImp implements PortfolioService {
                 buyQuantitiesOfStock += trade.getQuantity();
             }
             double totalBuyPriceOfStock = buyQuantitiesOfStock * buyPriceOfStock;
-            List<Trade> findSellTradesOfStock = sellTradeOfUser.get(key);
+            List<Trade> findSellTradesOfStock = sellTradesOfUser.get(key);
             double sellPriceOfStock = findSellTradesOfStock.get(0).getPrice();
             int sellQuantitiesOfStock = 0;
             if (!findSellTradesOfStock.isEmpty()) {
@@ -81,8 +90,12 @@ public class PortfolioServiceImp implements PortfolioService {
                 .gainLoss(gainLoss)
                 .build();
             holdings.add(holdingDto);
-
         }
+        return holdings;
+    }
+
+    private PortfolioResponseDto calculationOfPortfolio(List<HoldingDto> holdings)
+    {
         Double avgBuyPriceOfHoldings = 0.0;
         Double avgCurrentPriceOfHoldings = 0.0;
         double profitLoss = 0.0;
